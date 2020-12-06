@@ -8,10 +8,6 @@ const mongo = require('./mongo')
 const commands = fs.readdirSync('./commands')
 require('dotenv').config()
 
-class user{
-  
-}
-
 async function mongoose(){
   return await mongo()
 }
