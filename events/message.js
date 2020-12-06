@@ -7,14 +7,11 @@ const ms = require('ms')
 
 
 module.exports = async (message, mongoose, client) => {
-  const args = message.content.slice(prefix.length).trim().split(/ +/g);
-  const cmd = args.shift().toLowerCase();
-
   let newStatus = await antiadschema.findOne({
     Guild: message.guild.id
   })
 
-  newStatus ? (status = newStatus.antiadStatus) : (status = 'off')
+  newStatus ? (status = newStatus.antiadStatus) : (status = 'on')
 
   if (status === 'on'){
     const guildinvites = await message.guild.fetchInvites()
@@ -35,6 +32,9 @@ module.exports = async (message, mongoose, client) => {
   })
 
   newPrefix ? (prefix = newPrefix.Prefix) : (prefix = '!');
+
+  const args = message.content.slice(prefix.length).trim().split(/ +/g);
+  const cmd = args.shift().toLowerCase();
 
   if (!message.member) {
     message.member = await message.guild.fetchMember(message);
