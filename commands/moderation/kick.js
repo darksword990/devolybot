@@ -1,7 +1,7 @@
 module.exports = {
-    name: 'ping',
-    description: 'pong',
+    name: 'kick',
+    description: 'kicks the member',
     run: async (client, message, args, mongoose) => {
-        message.client.send('pong')
+        
     }
 }

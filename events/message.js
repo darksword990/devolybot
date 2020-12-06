@@ -3,7 +3,7 @@ let prefix;
 const ms = require('ms')
 
 
-module.exports = async (message, mongo, client) => {
+module.exports = async (message, mongoose, client) => {
   
 
   if (!message.member) {
@@ -24,4 +24,6 @@ module.exports = async (message, mongo, client) => {
   if (!message.member.hasPermission(command.permissions)){ 
     return message.channel.send({embed: {color: 0xff0000, title: `You are missing \`${command.permissions.join(', ')}\` permissions!`}})
   }
+
+  command.run(client, message, args, mongoose)
 }

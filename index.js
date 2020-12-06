@@ -34,17 +34,17 @@ client.on('ready', async () => {
 
 // message
 client.on('message', async message => {
-  require('./events/message')(message, (await mongoose()), client)
+  require('./events/message')(message, mongoose(), client)
 })
 
 // member join
 client.on('guildMemberAdd', async member => {
-  require('./events/guildMemberAdd')(member, (await mongoose()), client)
+  require('./events/guildMemberAdd')(member, mongoose(), client)
 })
 
 
 // client joined
 client.on('guildCreate', async guild => {
-  require('./events/guildCreate')(guild, (await mongoose()), client)
+  require('./events/guildCreate')(guild, mongoose(), client)
 })
 client.login(process.env.token)
