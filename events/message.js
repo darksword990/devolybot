@@ -1,10 +1,15 @@
+const prefixschema = require('../schemas/prefix-schema')
 let prefix;
 
 const ms = require('ms')
 
 
 module.exports = async (message, mongoose, client) => {
-  
+  let newPrefix = await prefixschema.findOne({
+    Guild: message.guild.id
+  })
+
+  newPrefix ? (prefix = newPrefix.Prefix) : (prefix = '!');
 
   if (!message.member) {
     message.member = await message.guild.fetchMember(message);
