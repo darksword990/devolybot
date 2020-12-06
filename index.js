@@ -13,7 +13,7 @@ async function mongoose(){
 }
 
 for (const dir of commands){
-  const commandfiles = fs.readdirSync(`./commands/${dir}`).filter(f => f.endsWith('.js'))
+  const commandfiles = fs.readdirSync(`./commands/${dir}/`).filter(f => f.endsWith('.js'))
   for (const command of commandfiles){
     const file = require(`./commands/${dir}/${command}`)
     client.commands.set(file.name, file)
