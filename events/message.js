@@ -36,6 +36,8 @@ module.exports = async (message, mongoose, client) => {
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const cmd = args.shift().toLowerCase();
 
+  console.log(message.member.roles.cache)
+
   if (!message.member) {
     message.member = await message.guild.fetchMember(message);
   }
