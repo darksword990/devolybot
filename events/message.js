@@ -6,7 +6,7 @@ let prefix;
 const ms = require('ms')
 
 
-module.exports = async (message, mongoose, client) => {
+module.exports = async (message, client) => {
   let newStatus = await antiadschema.findOne({
     Guild: message.guild.id
   })
@@ -36,7 +36,11 @@ module.exports = async (message, mongoose, client) => {
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const cmd = args.shift().toLowerCase();
 
-  console.log(message.member.roles.cache)
+  if (message.mentions.roles.size > 0) {
+    message.mentions.roles.array().forEach(f => {
+      console.log(f.id)
+    })
+  }
 
   if (!message.member) {
     message.member = await message.guild.fetchMember(message);
@@ -54,5 +58,5 @@ module.exports = async (message, mongoose, client) => {
     return message.channel.send({embed: {color: 0xff0000, title: `You are missing \`${command.permissions.join(', ')}\` permissions!`}})
   }
 
-  command.run(client, message, args, mongoose)
+  command.run(client, message, args)
 }
