@@ -11,7 +11,7 @@ module.exports = async (message, mongoose, client) => {
     Guild: message.guild.id
   })
 
-  newStatus ? (status = newStatus.antiadStatus) : (status = 'on')
+  newStatus ? (status = newStatus.antiadStatus) : (status = 'off')
 
   if (status === 'on'){
     const guildinvites = await message.guild.fetchInvites()
