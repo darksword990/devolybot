@@ -36,12 +36,6 @@ module.exports = async (message, client) => {
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const cmd = args.shift().toLowerCase();
 
-  if (message.mentions.roles.size > 0) {
-    message.mentions.roles.array().forEach(f => {
-      console.log(f.id)
-    })
-  }
-
   if (!message.member) {
     message.member = await message.guild.fetchMember(message);
   }
