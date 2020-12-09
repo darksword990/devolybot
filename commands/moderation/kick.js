@@ -1,7 +1,7 @@
 module.exports = {
     name: 'kick',
     description: 'kicks the member',
-    run: async (client, message, args, mongo) => {
+    run: async (client, message, args) => {
         
     }
 }

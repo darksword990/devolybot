@@ -1,13 +1,14 @@
 const prefixschema = require('../schemas/prefix-schema')
 const antiadschema = require('../schemas/antiad-schema')
+const mongo = require('../mongo')
 let status;
 let prefix;
 
 const ms = require('ms')
 
 
-module.exports = async (message, client, mongo) => {
-  await mongo.then(async mongoose => {
+module.exports = async (message, client) => {
+  await mongo().then(async mongoose => {
     let newStatus = await antiadschema.findOne({
       Guild: message.guild.id
     })
@@ -29,7 +30,7 @@ module.exports = async (message, client, mongo) => {
     }
   }
   
-  await mongo.then(async mongoose => {
+  await mongo().then(async mongoose => {
     try {
       let newPrefix = await prefixschema.findOne({Guild: message.guild.id});
       newPrefix ? (prefix = newPrefix.Prefix) : (prefix = "!");
@@ -37,6 +38,8 @@ module.exports = async (message, client, mongo) => {
       mongoose.connection.close();
     }
   })
+
+  console.log(prefix)
 
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const cmd = args.shift().toLowerCase();
@@ -59,5 +62,5 @@ module.exports = async (message, client, mongo) => {
     return message.channel.send({embed: {color: 0xff0000, title: `You are missing \`${command.permissions.join(', ')}\` permissions!`}})
   }
   
-  command.run(client, message, args, mongo)
+  command.run(client, message, args)
 }

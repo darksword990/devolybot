@@ -31,7 +31,7 @@ client.on('ready', async () => {
 
 // message
 client.on('message', async message => {
-  require('./events/message')(message, client, mongo())
+  require('./events/message')(message, client)
 })
 
 client.login(process.env.token)
