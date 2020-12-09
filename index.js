@@ -8,10 +8,6 @@ const mongo = require('./mongo')
 const commands = fs.readdirSync('./commands')
 require('dotenv').config()
 
-async function mongoose(){
-  return await mongo()
-}
-
 for (const dir of commands){
   const commandfiles = fs.readdirSync(`./commands/${dir}/`).filter(f => f.endsWith('.js'))
   for (const command of commandfiles){
@@ -24,17 +20,18 @@ for (const dir of commands){
 client.on('ready', async () => {
   console.log(`${client.user.tag} is ready`)
 
- 
-  try {
-    console.log(`Connected to mongo!`)
-  } finally {
-    (await mongoose()).connection.close()
-  }
+  await mongo().then(async mongoose => {
+    try {
+      console.log(`Connected to mongo!`)
+    } finally {
+      mongoose.connection.close()
+    }
+  })
 })
 
 // message
 client.on('message', async message => {
-  require('./events/message')(message, client)
+  require('./events/message')(message, client, mongo())
 })
 
 client.login(process.env.token)

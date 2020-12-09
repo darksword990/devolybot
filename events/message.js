@@ -6,12 +6,14 @@ let prefix;
 const ms = require('ms')
 
 
-module.exports = async (message, client) => {
-  let newStatus = await antiadschema.findOne({
-    Guild: message.guild.id
+module.exports = async (message, client, mongo) => {
+  await mongo.then(async mongoose => {
+    let newStatus = await antiadschema.findOne({
+      Guild: message.guild.id
+    })
+  
+    newStatus ? (status = newStatus.antiadStatus) : (status = 'on');
   })
-
-  newStatus ? (status = newStatus.antiadStatus) : (status = 'off')
 
   if (status === 'on'){
     const guildinvites = await message.guild.fetchInvites()
@@ -26,12 +28,15 @@ module.exports = async (message, client) => {
       }
     }
   }
-
-  let newPrefix = await prefixschema.findOne({
-    Guild: message.guild.id
+  
+  await mongo.then(async mongoose => {
+    try {
+      let newPrefix = await prefixschema.findOne({Guild: message.guild.id});
+      newPrefix ? (prefix = newPrefix.Prefix) : (prefix = "!");
+    } finally {
+      mongoose.connection.close();
+    }
   })
-
-  newPrefix ? (prefix = newPrefix.Prefix) : (prefix = '!');
 
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
   const cmd = args.shift().toLowerCase();
@@ -39,7 +44,9 @@ module.exports = async (message, client) => {
   if (!message.member) {
     message.member = await message.guild.fetchMember(message);
   }
+
   if (!message.content.toLowerCase().startsWith(prefix)) return;
+
   if (!message.guild) return;
 
   if (cmd.length === 0) return;
@@ -51,6 +58,6 @@ module.exports = async (message, client) => {
   if (!message.member.hasPermission(command.permissions)){ 
     return message.channel.send({embed: {color: 0xff0000, title: `You are missing \`${command.permissions.join(', ')}\` permissions!`}})
   }
-
-  command.run(client, message, args)
+  
+  command.run(client, message, args, mongo)
 }

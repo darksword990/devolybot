@@ -1,13 +1,14 @@
 const mongoose = require('mongoose')
 
-const required = {
-    type: String,
-    required: true
-}
-
-const prefixSchema = mongoose.Schema({
-    Guild: required,
-    prefix: required
+const prefixSchema = new mongoose.Schema({
+    Guild: {
+        type: String,
+        required: true
+    },
+    Prefix: {
+        type: String,
+        required: true
+    }
 })
 
 module.exports = mongoose.model('custom-prefix', prefixSchema)
