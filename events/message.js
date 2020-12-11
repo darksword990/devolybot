@@ -1,11 +1,13 @@
 const prefixschema = require('../schemas/prefix-schema')
 const antiadschema = require('../schemas/antiad-schema')
+const reqroleschema = require('../schemas/requiredRole-schema')
 const mongo = require('../mongo')
+
 let status;
 let prefix;
+let roles;
 
-const ms = require('ms')
-
+const ms = require('ms');
 
 module.exports = async (message, client) => {
   await mongo().then(async mongoose => {
@@ -13,7 +15,7 @@ module.exports = async (message, client) => {
       Guild: message.guild.id
     })
   
-    newStatus ? (status = newStatus.antiadStatus) : (status = 'on');
+    newStatus ? (status = newStatus.antiadStatus) : (status = 'off');
   })
 
   if (status === 'on'){
@@ -56,9 +58,32 @@ module.exports = async (message, client) => {
 
   if (!command) return;
 
-  if (!message.member.hasPermission(command.permissions)){ 
-    return message.channel.send({embed: {color: 0xff0000, title: `You are missing \`${command.permissions.join(', ')}\` permissions!`}})
+  await mongo().then(async mongoose => {
+    try {
+      let newroles = await reqroleschema.findOne({Guild: message.guild.id})
+      newroles ? (roles = newroles.requiredRoles) : (roles = ['779371168003653682', '776093229191397426'])
+    } finally {
+      mongoose.connection.close()
+    }
+  })
+
+  const roleids = message.member.roles.cache.map(f => f.id)
+  const data = []
+
+  if (roles !== null){
+    for (let i = 0; i < roleids.length; i++){
+      for (let j = 0; j < roles.length; j++){
+        if (roleids[i] !== roles[j]){
+          const roleobj = await message.guild.roles.resolve(roles[i])
+          data.push(roleobj)
+        }
+      }
+    }
   }
   
+  if (command.rolesRequired){
+    
+  }
+
   command.run(client, message, args)
 }

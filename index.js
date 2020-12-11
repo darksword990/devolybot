@@ -1,3 +1,16 @@
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => {
+  res.send('Hello world')
+})
+
+app.listen(port, () => {
+  console.log(`Listening on port ${port}`)
+})
+
+
 const path = require('path')
 const fs = require('fs')
 const Discord = require('discord.js')
@@ -18,6 +31,7 @@ for (const dir of commands){
 }
 
 client.on('ready', async () => {
+  client.user.setActivity(`over ${client.guilds.cache.size} guilds`, { type: `WATCHING` })
   console.log(`${client.user.tag} is ready`)
 
   await mongo().then(async mongoose => {

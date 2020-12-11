@@ -5,7 +5,7 @@ const required = {
     required: true
 }
 
-const prefixSchema = mongoose.Schema({
+const prefixSchema = new mongoose.Schema({
     Guild: required,
     antiadStatus: required
 })

@@ -1,4 +1,5 @@
 let prefix;
+
 const prefixschema = require('../../schemas/prefix-schema')
 const mongo = require('../../mongo')
 
@@ -6,6 +7,7 @@ module.exports = {
     name: 'setprefix',
     description: 'Sets the server prefix',
     aliases: ['prefix'],
+    rolesRequired: true,
     run: async (client, message, args) => {
         if (!args.length){
             await mongo().then(async mongoose => {

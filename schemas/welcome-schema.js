@@ -5,10 +5,13 @@ const reqString = {
     required: true
 }
 
-const welcomeSchema = mongoose.Schema({
-    _id: reqString,
+const welcomeSchema = new mongoose.Schema({
+    Guild: reqString,
     channelId: reqString,
-    text: reqString
+    title: reqString,
+    description: reqString,
+    color: Number,
+    image: Object
 })
 
 module.exports = mongoose.model('welcome-channels', welcomeSchema)
