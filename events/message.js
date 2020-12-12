@@ -11,11 +11,11 @@ const ms = require('ms');
 
 module.exports = async (message, client) => {
   await mongo().then(async mongoose => {
-    let newStatus = await antiadschema.findOne({
-      Guild: message.guild.id
-    })
-  
-    newStatus ? (status = newStatus.antiadStatus) : (status = 'off');
+      let newStatus = await antiadschema.findOne({
+        Guild: message.guild.id
+      })
+    
+      newStatus ? (status = newStatus.antiadStatus) : (status = 'off');
   })
 
   if (status === 'on'){
@@ -33,12 +33,12 @@ module.exports = async (message, client) => {
   }
   
   await mongo().then(async mongoose => {
-    try {
+    
       let newPrefix = await prefixschema.findOne({Guild: message.guild.id});
       newPrefix ? (prefix = newPrefix.Prefix) : (prefix = "!");
-    } finally {
-      mongoose.connection.close();
-    }
+    
+      
+    
   })
 
   const args = message.content.slice(prefix.length).trim().split(/ +/g);
@@ -59,30 +59,29 @@ module.exports = async (message, client) => {
   if (!command) return;
 
   await mongo().then(async mongoose => {
-    try {
-      let newroles = await reqroleschema.findOne({Guild: message.guild.id})
+    
+      let newroles = await reqroleschema.findOne({Guild: message.guild.id}).Command
       newroles ? (roles = newroles.requiredRoles) : (roles = ['779371168003653682', '776093229191397426'])
-    } finally {
-      mongoose.connection.close()
-    }
+    
+      
+    
   })
 
   const roleids = message.member.roles.cache.map(f => f.id)
   const data = []
 
-  if (roles !== null){
-    for (let i = 0; i < roleids.length; i++){
-      for (let j = 0; j < roles.length; j++){
-        if (roleids[i] !== roles[j]){
-          const roleobj = await message.guild.roles.resolve(roles[i])
-          data.push(roleobj)
+  if (command.rolesRequired){
+    if (roles !== null){
+      for (let i = 0; i < roleids.length; i++){
+        for (let j = 0; j < roles.length; j++){
+          if (roleids[i] !== roles[j]){
+            const roleobj = await message.guild.roles.resolve(roles[i])
+            data.push(roleobj)
+          }
         }
       }
+      data.forEach(f => console.log(f.name))
     }
-  }
-  
-  if (command.rolesRequired){
-    
   }
 
   command.run(client, message, args)

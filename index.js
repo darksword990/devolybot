@@ -35,4 +35,4 @@ client.on('message', async message => {
   require('./events/message')(message, client)
 })
 
-client.login(process.env.token)
+client.login(process.env.BOTTOKEN)
